@@ -34,13 +34,17 @@ public class ServiceCommandLookupTest {
 
   @Test
   public void testLookup() throws Exception {
-    final Collection<CommandFactory> commands = loader.lookup();
+    Collection<CommandFactory<?>> commands = loader.lookup();
     ensureCommand(commands, "run");
     ensureCommand(commands, "bare");
     ensureCommand(commands, "version");
+
+    ensureCommand(commands, "list");
+    ensureCommand(commands, "start");
+    ensureCommand(commands, "stop");
   }
 
-  private void ensureCommand(Collection<CommandFactory> commands, String name) {
+  private void ensureCommand(Collection<CommandFactory<?>> commands, String name) {
     List<CLI> clis = new ArrayList<>();
     for (CommandFactory command : commands) {
       CLI cli = command.define();

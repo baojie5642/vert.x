@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * A command starting a vert.x application in the background.
@@ -109,9 +108,8 @@ public class StartCommand extends DefaultCommand {
       ExecUtils.addArgument(cmd, "-jar");
       ExecUtils.addArgument(cmd, CommandLineUtils.getJar());
     } else {
-      // probably a `vertx` command line usage.
+      // probably a `vertx` command line usage, or in IDE.
       ExecUtils.addArgument(cmd, CommandLineUtils.getFirstSegmentOfCommand());
-      ExecUtils.addArgument(cmd, "run");
     }
 
     getArguments().stream().forEach(arg -> ExecUtils.addArgument(cmd, arg));
@@ -120,7 +118,7 @@ public class StartCommand extends DefaultCommand {
       builder.command(cmd);
       if (redirect) {
         builder.redirectError(ProcessBuilder.Redirect.INHERIT);
-        builder.redirectInput(ProcessBuilder.Redirect.INHERIT);
+        builder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
       }
       builder.start();
       out.println(id);
@@ -176,10 +174,7 @@ public class StartCommand extends DefaultCommand {
     List<String> args = executionContext.commandLine().allArguments();
     // Add system properties passed as parameter
     if (systemProperties != null) {
-      args.addAll(
-          systemProperties.stream().map(
-              entry -> "-D" + entry)
-              .collect(Collectors.toList()));
+      systemProperties.stream().map(entry -> "-D" + entry).forEach(args::add);
     }
 
     // Add id - it's important as it's the application mark.
