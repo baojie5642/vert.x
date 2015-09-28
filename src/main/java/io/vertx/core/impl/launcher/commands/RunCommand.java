@@ -226,7 +226,7 @@ public class RunCommand extends BareCommand {
     List<String> args = new ArrayList<>();
     // Prepend the command.
     args.add("run");
-    args.add("--vertx.id=" + vertxApplicationBackgroundId);
+    args.add("--vertx-id=" + vertxApplicationBackgroundId);
     args.addAll(executionContext.commandLine().allArguments());
     // No need to add the main-verticle as it's part of the allArguments list.
     if (cluster) {
