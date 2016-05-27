@@ -265,7 +265,13 @@ public class HAManager {
     if (attainedQuorum) {
 
       // Check for failover
-      String sclusterInfo = clusterMap.get(leftNodeID);
+      String sclusterInfo = null;
+      try {
+        sclusterInfo = clusterMap.get(leftNodeID);
+      } catch (Throwable t) {
+        log.warn("Cannot read cluster map - the cluster is probably already stopped: " + t.getMessage());
+        log.debug("Caught error is: ", t);
+      }
 
       if (sclusterInfo == null) {
         // Clean close - do nothing
